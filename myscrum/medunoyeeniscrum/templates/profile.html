@@ -1,0 +1,85 @@
+<h2>Currently Logged in as {{username}} - {{role}} </h2>
+<a href=" {% url 'medunoyeeniscrum:scrum_logout' %} ">Logout</a>
+<br>
+<h3>Your Details</h3>
+<br>
+<ul>
+	<li> Name : {{user_info.nickname}} </li>
+	<li>ID: {{user_info.id}} </li>
+	<li> Age : {{user_info.age}} </li>
+</ul>
+<h3>Add Goal</h3>
+<form action=" {% url 'medunoyeeniscrum:add_goal' %} " method="post">
+	{% csrf_token %}
+	<label for = "name ">Name :</label>
+	<input type="text" id = "name" name="name">
+	<br>
+	<input type="submit" value="Add Goal">
+</form>
+{% if messages %}
+    {% for message in messages %}
+            <h3 style=" {% if message.tags == 'success'%} color: green {% else %} color:red {% endif %}; ">{{message}}</h3> 
+    {% endfor %}
+{% endif %}
+
+<style>
+	.full-box{
+		text-align: center;
+		border: 2px solid black;
+		padding: 10px;
+	}
+
+	.top-box{
+		text-align: center;
+		border: 1px solid grey;
+		border-top: 2px solid black;
+		padding: 10px;
+	}
+	.reg-box{
+		text-align: center;
+		border: 1px solid gray;
+		padding: 10px;
+	}
+
+
+</style>
+
+{% if goal_list %}
+	<table style="table-layout: fixed; width: 700px; word-wrap: break-word; border-collapse:collapse; border: 2px solid black " >
+		<tr>
+			<th colspan = "6" class = "full-box"> Available Goal{{goal_list|pluralize}} </th>
+		</tr>
+		<tr>
+			<th class = "full-box" >Created By</th>
+			<th class = "full-box"> Weekly Goal</th>
+			<th class = "full-box">Daily Target</th>
+			<th class = "full-box"> Verify </th>
+			<th class = "full-box"> Done </th>
+			<th class = "full-box"> Remove</th>
+		</tr>
+		{% for goal, goal_count in goal_list %}
+			<tr>
+				{% if goal_count != 0 %}	
+					<td rowspan=" {{goal_count}}" class = "full-box"> {{goal.user.nickname}} </td>
+				{% endif %}
+
+				{% for num in nums_list %}
+					<td class = "{% if goal_count != 0 %} top-box {% else %} reg-box {% endif %} ">
+						{% if goal.status == num %}
+							{{goal.id}}) {{goal.name}}
+						{% else %}
+							<a href=" {% url 'medunoyeeniscrum:move_goal' goal.id num %} "> - </a>
+						{% endif %}
+					</td>
+				{% endfor %}
+				<td class = "{% if goal_count != 0 %} top-box {% else %} reg-box {% endif %} ">
+					<a href=" {% url 'medunoyeeniscrum:remove_goal' goal.id %} ">*</a>
+				</td>
+		{% endfor %}
+
+	</table>
+{% else %}
+	<p>No goals have been created.</p>
+{% endif %}
+
+

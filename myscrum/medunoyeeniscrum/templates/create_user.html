@@ -1,0 +1,37 @@
+<h1>Create User</h1>
+<form action = "{% url 'medunoyeeniscrum:init_user' %}" method="post" >
+    {% csrf_token %}
+
+    <label for = "username">Username:</label>
+    <input type="text" id = "username" name="username">
+    <br>
+    <label for = "password">Password:</label>
+    <input type="password" id ="password" name="password">
+    <br>
+    <label for = "rtpassword">Retype Password:</label>
+    <input type="password" id ="rtpassword" name="rtpassword">
+    <br>
+    <label for = "full_name">Full name:</label>
+    <input type="text" id ="full_name" name="full_name">
+    <br>
+    <label for = "age">Age:</label>
+    <input type="text" id ="age" name="age">
+    <br>
+    <label for = "usertype">User Type:</label>
+    <select id = "usertype" name = "usertype"> 
+          <option value = "Owner">Owner</option>
+          <option value = "Admin">Admin</option>
+          <option value = "Developer" selected="selected">Developer </option>
+          <option value="Quality Analyst">Quality Analyst </option>
+    </select>
+    <br>
+    <input type="submit" value="Create User">
+</form>
+
+{% if messages %}
+    {% for message in messages %}
+            <h3>{{message}}</h3> 
+    {% endfor %}
+{% endif %}
+
+<a href=" {% url 'login' %} ">Back to login</a>
